@@ -1,0 +1,132 @@
+﻿{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@deck.gl/geo-layers": {
+      "name": "@deck.gl/geo-layers",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@loaders.gl/wms"
+      ],
+      "effects": [],
+      "range": ">=8.9.16",
+      "nodes": [
+        "node_modules/@deck.gl/geo-layers"
+      ],
+      "fixAvailable": {
+        "name": "@deck.gl/geo-layers",
+        "version": "8.9.15",
+        "isSemVerMajor": true
+      }
+    },
+    "@loaders.gl/wms": {
+      "name": "@loaders.gl/wms",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@loaders.gl/xml"
+      ],
+      "effects": [
+        "@deck.gl/geo-layers"
+      ],
+      "range": "3.4.0-alpha.1 - 4.4.0-alpha.12",
+      "nodes": [
+        "node_modules/@loaders.gl/wms"
+      ],
+      "fixAvailable": {
+        "name": "@deck.gl/geo-layers",
+        "version": "8.9.15",
+        "isSemVerMajor": true
+      }
+    },
+    "@loaders.gl/xml": {
+      "name": "@loaders.gl/xml",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "fast-xml-parser"
+      ],
+      "effects": [
+        "@loaders.gl/wms"
+      ],
+      "range": "3.4.0-alpha.1 - 4.4.0-alpha.12",
+      "nodes": [
+        "node_modules/@loaders.gl/xml"
+      ],
+      "fixAvailable": {
+        "name": "@deck.gl/geo-layers",
+        "version": "8.9.15",
+        "isSemVerMajor": true
+      }
+    },
+    "fast-xml-parser": {
+      "name": "fast-xml-parser",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1113331,
+          "name": "fast-xml-parser",
+          "dependency": "fast-xml-parser",
+          "title": "fast-xml-parser affected by DoS through entity expansion in DOCTYPE (no expansion limit)",
+          "url": "https://github.com/advisories/GHSA-jmr7-xgp7-cmfj",
+          "severity": "high",
+          "cwe": [
+            "CWE-776"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.1.3 <5.3.6"
+        },
+        {
+          "source": 1113407,
+          "name": "fast-xml-parser",
+          "dependency": "fast-xml-parser",
+          "title": "fast-xml-parser has an entity encoding bypass via regex injection in DOCTYPE entity names",
+          "url": "https://github.com/advisories/GHSA-m7jm-9gc2-mpf2",
+          "severity": "critical",
+          "cwe": [
+            "CWE-185"
+          ],
+          "cvss": {
+            "score": 9.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:H/A:N"
+          },
+          "range": ">=4.1.3 <5.3.5"
+        }
+      ],
+      "effects": [
+        "@loaders.gl/xml"
+      ],
+      "range": "4.1.3 - 5.3.5",
+      "nodes": [
+        "node_modules/fast-xml-parser"
+      ],
+      "fixAvailable": {
+        "name": "@deck.gl/geo-layers",
+        "version": "8.9.15",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 3,
+      "critical": 1,
+      "total": 4
+    },
+    "dependencies": {
+      "prod": 256,
+      "dev": 360,
+      "optional": 85,
+      "peer": 3,
+      "peerOptional": 0,
+      "total": 657
+    }
+  }
+}
