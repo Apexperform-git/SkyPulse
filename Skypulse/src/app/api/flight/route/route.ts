@@ -28,9 +28,29 @@ export async function GET(request: Request) {
     }
 
     try {
-        // Attempt 1: AirLabs Schedules API (best for commercial scheduled flights)
+        let commercialFlightId = callsign; // Default to the callsign
+        let fallbackDepIata: string | null = null;
+        let fallbackArrIata: string | null = null;
+
+        // Step 1: Query Live Tracker API to resolve the ATC callsign into a commercial flight number
+        const flightRes = await fetch(
+            `${AIRLABS_FLIGHT_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
+            { cache: "no-store" }
+        );
+
+        if (flightRes.ok) {
+            const data = await flightRes.json();
+            if (data.response && (data.response.flight_iata || data.response.flight_icao)) {
+                commercialFlightId = data.response.flight_iata || data.response.flight_icao;
+                // Save generic live origin/dest just in case schedules fail
+                fallbackDepIata = data.response.dep_iata || null;
+                fallbackArrIata = data.response.arr_iata || null;
+            }
+        }
+
+        // Step 2: Query AirLabs Schedules API using the commercial flight number
         const schedulesRes = await fetch(
-            `${AIRLABS_SCHEDULES_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
+            `${AIRLABS_SCHEDULES_URL}?flight_iata=${encodeURIComponent(commercialFlightId)}&api_key=${AIRLABS_API_KEY}`,
             { cache: "no-store" }
         );
 
@@ -49,12 +69,14 @@ export async function GET(request: Request) {
             }
         }
 
-        // Attempt 2: Aviationstack (Fallback for rate limits)
+        // Step 3: Aviationstack (Fallback 1)
         if (AVIATIONSTACK_API_KEY) {
+            // Aviationstack usually requires the IATA code for commercial lookups
             const asRes = await fetch(
-                `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&flight_icao=${encodeURIComponent(callsign)}`,
+                `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&flight_iata=${encodeURIComponent(commercialFlightId)}`,
                 { cache: "no-store" }
             );
+
             if (asRes.ok) {
                 const asData = await asRes.json();
                 if (asData.data && asData.data.length > 0) {
@@ -69,22 +91,15 @@ export async function GET(request: Request) {
             }
         }
 
-        // Attempt 3: AirLabs Flight Tracker (Fallback for non-scheduled live flights like military/private)
-        const flightRes = await fetch(
-            `${AIRLABS_FLIGHT_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
-            { cache: "no-store" }
-        );
-
-        if (flightRes.ok) {
-            const data = await flightRes.json();
-            if (data.response && data.response.dep_iata) {
-                return NextResponse.json({
-                    dep_iata: data.response.dep_iata || null,
-                    arr_iata: data.response.arr_iata || null,
-                    dep_time: null, // Live tracker endpoints usually lack schedule times
-                    arr_time: null,
-                });
-            }
+        // Step 4: Live Tracker Fallback 
+        // If neither schedule API found anything, return the generic origin/dest we found in Step 1
+        if (fallbackDepIata || fallbackArrIata) {
+            return NextResponse.json({
+                dep_iata: fallbackDepIata,
+                arr_iata: fallbackArrIata,
+                dep_time: null,
+                arr_time: null,
+            });
         }
 
         // Output explicitly empty route if nothing found so the frontend handles it gracefully
