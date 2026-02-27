@@ -10,6 +10,8 @@ export type Route = {
   origin: Airport | null;
   destination: Airport | null;
   equipment: string | null;
+  departureTime: string | null;
+  arrivalTime: string | null;
 };
 
 // Airport lookup by IATA code for O(1) matching
@@ -63,6 +65,8 @@ export async function lookupRoute(callsign: string | null): Promise<Route | null
       origin,
       destination,
       equipment: null,
+      departureTime: data.dep_time || null,
+      arrivalTime: data.arr_time || null,
     };
 
     routeCache.set(normalized, route);
@@ -76,8 +80,13 @@ export async function lookupRoute(callsign: string | null): Promise<Route | null
 
 /**
  * Synchronous lookup for preloaded routes (client-side after initial async load)
+ * Returns `undefined` if the route hasn't been fetched yet.
  */
-export function lookupRouteSync(callsign: string | null): Route | null {
+export function lookupRouteSync(callsign: string | null): Route | null | undefined {
   if (!callsign) return null;
-  return routeCache.get(callsign.trim().toUpperCase()) || null;
+  const normalized = callsign.trim().toUpperCase();
+  if (routeCache.has(normalized)) {
+    return routeCache.get(normalized);
+  }
+  return undefined; // Not in cache (loading)
 }
