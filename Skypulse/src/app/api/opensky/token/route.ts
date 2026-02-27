@@ -5,10 +5,8 @@ export const runtime = "edge";
 const OPENSKY_TOKEN_URL =
     "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
 
-// In a real application, these should be loaded from environment variables (.env).
-// Keeping them here to match the existing behavior until environment variables are fully adopted.
-const OPENSKY_CLIENT_ID = process.env.OPENSKY_CLIENT_ID || "apexperform-api-client";
-const OPENSKY_CLIENT_SECRET = process.env.OPENSKY_CLIENT_SECRET || "esjCx4eOlrhjftlPx4GKBwFMN4JyLaUk";
+const OPENSKY_CLIENT_ID = process.env.OPENSKY_CLIENT_ID || "";
+const OPENSKY_CLIENT_SECRET = process.env.OPENSKY_CLIENT_SECRET || "";
 
 export async function GET() {
     try {

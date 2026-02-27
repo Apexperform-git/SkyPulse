@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
-const AIRLABS_API_KEY = process.env.AIRLABS_API_KEY || "07abefda-6a6b-4926-a908-4c1ca788010e";
+const AIRLABS_API_KEY = process.env.AIRLABS_API_KEY || "";
 const AIRLABS_FLIGHT_URL = "https://airlabs.co/api/v9/flight";
 
 export async function GET(request: Request) {
