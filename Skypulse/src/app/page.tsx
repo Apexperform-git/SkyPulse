@@ -1,5 +1,4 @@
 import { FlightTracker } from "@/components/flight-tracker";
-import { TopAdBanner } from "@/components/ui/top-ad-banner";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -23,7 +22,6 @@ export default function Home() {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <TopAdBanner />
       <FlightTracker />
     </>
   );
