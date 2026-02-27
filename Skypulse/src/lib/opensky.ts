@@ -18,7 +18,7 @@ async function getAccessToken(): Promise<string | null> {
     });
 
     if (!res.ok) {
-      console.error("Failed to get OpenSky token from backend proxy:", res.status);
+      console.warn(`OpenSky Proxy returned ${res.status}. Falling back to unauthenticated requests.`);
       return null;
     }
 
