@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
-const AVIATIONSTACK_API_KEY = process.env.AVIATIONSTACK_API_KEY || "b13cb1ed25f9e1eda58fc1b617ff3c98";
-const AVIATIONSTACK_URL = "http://api.aviationstack.com/v1/flights";
+const AIRLABS_API_KEY = process.env.AIRLABS_API_KEY || "07abefda-6a6b-4926-a908-4c1ca788010e";
+const AIRLABS_FLIGHT_URL = "https://airlabs.co/api/v9/flight";
 
 export async function GET(request: Request) {
-    if (!AVIATIONSTACK_API_KEY) {
+    if (!AIRLABS_API_KEY) {
         return NextResponse.json(
-            { error: "AVIATIONSTACK_API_KEY is not configured on the server." },
+            { error: "AIRLABS_API_KEY is not configured on the server." },
             { status: 500 }
         );
     }
@@ -24,14 +24,15 @@ export async function GET(request: Request) {
     }
 
     try {
+        // AirLabs flight_icao parameter accepts callsigns / flight numbers
         const res = await fetch(
-            `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&flight_icao=${encodeURIComponent(callsign)}`,
-            { cache: "no-store" } // Aviationstack requires standard http for free tier mostly.
+            `${AIRLABS_FLIGHT_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
+            { cache: "no-store" }
         );
 
         if (!res.ok) {
             return NextResponse.json(
-                { error: "Failed to fetch route from Aviationstack" },
+                { error: "Failed to fetch route from AirLabs" },
                 { status: res.status }
             );
         }
@@ -40,20 +41,18 @@ export async function GET(request: Request) {
 
         if (data.error) {
             return NextResponse.json(
-                { error: data.error.message || "Aviationstack returned an error" },
+                { error: data.error.message || "AirLabs returned an error" },
                 { status: 400 }
             );
         }
 
-        // Aviationstack returns an array under `data`
-        const flight = data.data?.[0];
-
+        // Return just the relevant airport data
         return NextResponse.json({
-            dep_iata: flight?.departure?.iata || null,
-            arr_iata: flight?.arrival?.iata || null,
+            dep_iata: data.response?.dep_iata || null,
+            arr_iata: data.response?.arr_iata || null,
         });
     } catch (error) {
-        console.error("Error looking up flight route from Aviationstack:", error);
+        console.error("Error looking up flight route from AirLabs:", error);
         return NextResponse.json(
             { error: "Internal Server Error during flight route lookup" },
             { status: 500 }
