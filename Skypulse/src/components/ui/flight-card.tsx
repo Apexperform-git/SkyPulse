@@ -58,6 +58,27 @@ function formatMeters(meters: number): string {
   return String(closest);
 }
 
+// Format departure/arrival times cleanly
+function formatRouteTime(timeStr: string | null): string | null {
+  if (!timeStr) return null;
+  // Handle ISO 8601 string from AviationStack (e.g. "2026-02-27T22:00:00+00:00")
+  if (timeStr.includes("T")) {
+    try {
+      const d = new Date(timeStr);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'UTC', hour12: false });
+      }
+    } catch {
+      // ignore
+    }
+  }
+  // Handle space separated from AirLabs (e.g. "YYYY-MM-DD HH:MM")
+  if (timeStr.includes(' ')) {
+    return timeStr.split(' ')[1] || timeStr;
+  }
+  return timeStr;
+}
+
 export function FlightCard({
   flight,
   onClose,
@@ -288,7 +309,7 @@ export function FlightCard({
                   <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">Origin</span>
                   <span className="text-[13px] font-bold tracking-tight text-white">{route.origin.iata}</span>
                   {route.departureTime && (
-                    <span className="text-[10px] font-medium tracking-wide text-white/30">{route.departureTime.split(' ')[1] || route.departureTime}</span>
+                    <span className="text-[10px] font-medium tracking-wide text-white/30">{formatRouteTime(route.departureTime)}</span>
                   )}
                 </div>
                 <Plane className="h-4 w-4 text-white/30" />
@@ -296,7 +317,7 @@ export function FlightCard({
                   <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">Destination</span>
                   <span className="text-[13px] font-bold tracking-tight text-white">{route.destination.iata}</span>
                   {route.arrivalTime && (
-                    <span className="text-[10px] font-medium tracking-wide text-white/30">{route.arrivalTime.split(' ')[1] || route.arrivalTime}</span>
+                    <span className="text-[10px] font-medium tracking-wide text-white/30">{formatRouteTime(route.arrivalTime)}</span>
                   )}
                 </div>
               </div>
