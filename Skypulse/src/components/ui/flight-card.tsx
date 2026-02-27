@@ -282,6 +282,20 @@ export function FlightCard({
               </div>
             )}
 
+            {route && route.origin && route.destination && (
+              <div className="mt-2.5 flex items-center justify-between rounded-lg bg-white/5 px-2.5 py-1.5 align-middle">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">Origin</span>
+                  <span className="text-[13px] font-bold tracking-tight text-white">{route.origin.iata}</span>
+                </div>
+                <Plane className="h-4 w-4 text-white/30" />
+                <div className="flex flex-col text-right">
+                  <span className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">Destination</span>
+                  <span className="text-[13px] font-bold tracking-tight text-white">{route.destination.iata}</span>
+                </div>
+              </div>
+            )}
+
             <div className="mt-3 h-px bg-linear-to-r from-transparent via-white/6 to-transparent" />
 
             <div className="mt-3 grid grid-cols-2 gap-3">
