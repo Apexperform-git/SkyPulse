@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+export const runtime = "edge";
 
 const OPENSKY_TOKEN_URL =
     "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";

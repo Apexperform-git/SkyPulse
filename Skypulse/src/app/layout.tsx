@@ -61,6 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        <meta name="google-adsense-account" content="ca-pub-2675217460226988" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
