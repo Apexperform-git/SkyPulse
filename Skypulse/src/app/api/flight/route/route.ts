@@ -33,19 +33,26 @@ export async function GET(request: Request) {
         let fallbackArrIata: string | null = null;
 
         // Step 1: Query Live Tracker API to resolve the ATC callsign into a commercial flight number
-        const flightRes = await fetch(
-            `${AIRLABS_FLIGHT_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
-            { cache: "no-store" }
-        );
+        try {
+            const flightRes = await fetch(
+                `${AIRLABS_FLIGHT_URL}?flight_icao=${encodeURIComponent(callsign)}&api_key=${AIRLABS_API_KEY}`,
+                { cache: "no-store" }
+            );
 
-        if (flightRes.ok) {
-            const data = await flightRes.json();
-            if (data.response && (data.response.flight_iata || data.response.flight_icao)) {
-                commercialFlightId = data.response.flight_iata || data.response.flight_icao;
-                // Save generic live origin/dest just in case schedules fail
-                fallbackDepIata = data.response.dep_iata || null;
-                fallbackArrIata = data.response.arr_iata || null;
+            if (flightRes.ok) {
+                const data = await flightRes.json();
+                if (data.error) {
+                    throw new Error(data.error.message || "Flight not tracked by AirLabs");
+                }
+                if (data.response && (data.response.flight_iata || data.response.flight_icao)) {
+                    commercialFlightId = data.response.flight_iata || data.response.flight_icao;
+                    // Save generic live origin/dest just in case schedules fail
+                    fallbackDepIata = data.response.dep_iata || null;
+                    fallbackArrIata = data.response.arr_iata || null;
+                }
             }
+        } catch (err) {
+            console.warn("AirLabs Live Tracker failed to translate callsign, falling back to raw callsign:", err);
         }
 
         // Step 2: Query AirLabs Schedules API using the commercial flight number
@@ -71,11 +78,20 @@ export async function GET(request: Request) {
 
         // Step 3: Aviationstack (Fallback 1)
         if (AVIATIONSTACK_API_KEY) {
-            // Aviationstack usually requires the IATA code for commercial lookups
-            const asRes = await fetch(
-                `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&flight_iata=${encodeURIComponent(commercialFlightId)}`,
-                { cache: "no-store" }
-            );
+            let asUrl = `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&flight_iata=${encodeURIComponent(commercialFlightId)}`;
+
+            // If we still have an ATC callsign (e.g. TRA26Q) and never got a commercial ID
+            if (commercialFlightId === callsign && callsign.length > 3) {
+                // Extract 3-letter ICAO airline code and numeric flight number
+                const airlineMatch = callsign.match(/^[A-Z]{3}/);
+                const numberMatch = callsign.match(/\d+/);
+
+                if (airlineMatch && numberMatch) {
+                    asUrl = `${AVIATIONSTACK_URL}?access_key=${AVIATIONSTACK_API_KEY}&airline_icao=${encodeURIComponent(airlineMatch[0])}&flight_num=${encodeURIComponent(numberMatch[0])}`;
+                }
+            }
+
+            const asRes = await fetch(asUrl, { cache: "no-store" });
 
             if (asRes.ok) {
                 const asData = await asRes.json();
