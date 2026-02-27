@@ -25,7 +25,7 @@ import {
 import { lookupAirline, parseFlightNumber } from "@/lib/airlines";
 import { aircraftTypeHint } from "@/lib/aircraft";
 import { airlineLogoCandidates } from "@/lib/airline-logos";
-import { lookupRouteSync } from "@/lib/routes";
+import { lookupRoute, lookupRouteSync, type Route } from "@/lib/routes";
 import { useSettings } from "@/hooks/use-settings";
 import {
   loadedAirlineLogoUrls,
@@ -76,7 +76,23 @@ export function FlightCard({
   const cardinal = heading !== null ? headingToCardinal(heading) : null;
 
   // Route lookup
-  const route = flight ? lookupRouteSync(flight.callsign) : null;
+  const [route, setRoute] = useState<Route | null>(null);
+
+  useEffect(() => {
+    if (!flight?.callsign) {
+      setRoute(null);
+      return;
+    }
+    const syncRoute = lookupRouteSync(flight.callsign);
+    if (syncRoute) {
+      setRoute(syncRoute);
+    } else {
+      setRoute(null);
+      lookupRoute(flight.callsign).then((fetchedRoute) => {
+        if (fetchedRoute) setRoute(fetchedRoute);
+      });
+    }
+  }, [flight?.callsign]);
   const canEnterFpv =
     flight != null &&
     flight.longitude != null &&
