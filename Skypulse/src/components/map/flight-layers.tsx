@@ -380,9 +380,9 @@ function trimPathAheadOfAircraft(
     const t =
       denom > 1e-12
         ? Math.max(
-            0,
-            Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / denom),
-          )
+          0,
+          Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / denom),
+        )
         : 0;
     const qx = a[0] + dx * t;
     const qy = a[1] + dy * t;
@@ -668,7 +668,7 @@ export function FlightLayers({
 
     if (!overlayRef.current) {
       overlayRef.current = new MapboxOverlay({
-        interleaved: false,
+        interleaved: true, // Fixes frame-by-frame jitter between 3D plane and map camera
         pickingRadius: AIRCRAFT_PICK_RADIUS_PX,
         layers: [],
       });
@@ -807,42 +807,42 @@ export function FlightLayers({
           const trendPitch =
             trendTrail && trendTrail.path.length >= 2
               ? (() => {
-                  const end = trendTrail.path.length - 1;
-                  const start = Math.max(0, end - 7);
-                  const startAlt =
-                    trendTrail.altitudes[start] ??
-                    trendTrail.altitudes[end] ??
-                    f.baroAltitude ??
-                    0;
-                  const endAlt =
-                    trendTrail.altitudes[end] ?? f.baroAltitude ?? startAlt;
-                  const [sLng, sLat] = trendTrail.path[start];
-                  const [eLng, eLat] = trendTrail.path[end];
-                  const horizontalMeters = horizontalDistanceFromLngLat(
-                    sLng,
-                    sLat,
-                    eLng,
-                    eLat,
-                  );
-                  if (horizontalMeters < 1) return 0;
-                  return (
-                    (-Math.atan2(endAlt - startAlt, horizontalMeters) * 180) /
-                    Math.PI
-                  );
-                })()
+                const end = trendTrail.path.length - 1;
+                const start = Math.max(0, end - 7);
+                const startAlt =
+                  trendTrail.altitudes[start] ??
+                  trendTrail.altitudes[end] ??
+                  f.baroAltitude ??
+                  0;
+                const endAlt =
+                  trendTrail.altitudes[end] ?? f.baroAltitude ?? startAlt;
+                const [sLng, sLat] = trendTrail.path[start];
+                const [eLng, eLat] = trendTrail.path[end];
+                const horizontalMeters = horizontalDistanceFromLngLat(
+                  sLng,
+                  sLat,
+                  eLng,
+                  eLat,
+                );
+                if (horizontalMeters < 1) return 0;
+                return (
+                  (-Math.atan2(endAlt - startAlt, horizontalMeters) * 180) /
+                  Math.PI
+                );
+              })()
               : 0;
 
           const risePitch =
             curr && prev
               ? (() => {
-                  const horizontalMeters = horizontalDistanceMeters(prev, curr);
-                  if (horizontalMeters < 1) return 0;
-                  const deltaAltitudeMeters = curr.alt - prev.alt;
-                  return (
-                    (-Math.atan2(deltaAltitudeMeters, horizontalMeters) * 180) /
-                    Math.PI
-                  );
-                })()
+                const horizontalMeters = horizontalDistanceMeters(prev, curr);
+                if (horizontalMeters < 1) return 0;
+                const deltaAltitudeMeters = curr.alt - prev.alt;
+                return (
+                  (-Math.atan2(deltaAltitudeMeters, horizontalMeters) * 180) /
+                  Math.PI
+                );
+              })()
               : 0;
 
           const speed = Number.isFinite(f.velocity) ? f.velocity! : 0;
@@ -994,9 +994,9 @@ export function FlightLayers({
                 clipped.length < 4
                   ? clipped
                   : smoothElevatedPath(
-                      clipped,
-                      isFullHistory ? 0 : smoothingIterations,
-                    );
+                    clipped,
+                    isFullHistory ? 0 : smoothingIterations,
+                  );
 
               return smoothed.map((p) => [p[0], p[1], Math.max(0, p[2])]);
             }
@@ -1005,9 +1005,9 @@ export function FlightLayers({
               denseBasePath.length < 4
                 ? denseBasePath
                 : smoothElevatedPath(
-                    denseBasePath,
-                    isFullHistory ? 0 : smoothingIterations,
-                  );
+                  denseBasePath,
+                  isFullHistory ? 0 : smoothingIterations,
+                );
 
             return smoothed.map((p) => [p[0], p[1], Math.max(0, p[2])]);
           };

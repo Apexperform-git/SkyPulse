@@ -302,7 +302,7 @@ export function FlightCard({
               </div>
             )}
 
-            {route === null && !flight.onGround && (
+            {route === null && (
               <div className="mt-2.5 flex flex-col items-center justify-center rounded-lg border border-white/5 bg-white/5 px-2.5 py-2 text-center">
                 <span className="text-[10px] font-semibold tracking-wider text-white/30 uppercase">Route Data Unavailable</span>
                 <span className="text-[9px] font-medium text-white/20">Private or unscheduled flight</span>

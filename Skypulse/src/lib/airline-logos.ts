@@ -69,7 +69,6 @@ export function airlineLogoCandidates(airlineName: string | null): string[] {
 
   const candidates: string[] = [];
   for (const s of orderedSlugs) {
-    candidates.push(`/airline-logos/${s}.svg`);
     candidates.push(`/airline-logos/${s}.png`);
   }
 

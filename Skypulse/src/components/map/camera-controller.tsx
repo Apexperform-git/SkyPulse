@@ -307,33 +307,16 @@ export function CameraController({
         const center = map.getCenter();
         const centerAlpha = FPV_CENTER_ALPHA * trackingStrength;
 
+        // Instead of unpredictably projecting pixel deltas (which bounces violently 
+        // as the plane's altitude fluctuates along the mesh), smoothly animate to a 
+        // fixed vertical offset to keep the plane in the bottom 1/4 of the screen.
         const canvas = map.getCanvas();
-        const canvasW = Math.max(1, canvas.clientWidth);
         const canvasH = Math.max(1, canvas.clientHeight);
+        const desiredOffsetY = canvasH * 0.15; // Shift center up so plane is slightly lower
 
-        const elevationMeters = Math.max(safeAlt * 5, 200);
-        const deltaPx = projectLngLatElevationPixelDelta(
-          map,
-          targetLng,
-          targetLat,
-          elevationMeters,
-        );
-        if (deltaPx) {
-          const desiredX = fpvOffsetX - deltaPx.dx;
-          const desiredY = fpvOffsetY - deltaPx.dy;
-          const offsetAlpha = 0.08 * trackingStrength;
-          fpvOffsetX = lerp(fpvOffsetX, desiredX, offsetAlpha);
-          fpvOffsetY = lerp(fpvOffsetY, desiredY, offsetAlpha);
-        } else {
-          const decayAlpha = 0.1 * trackingStrength;
-          fpvOffsetX = lerp(fpvOffsetX, 0, decayAlpha);
-          fpvOffsetY = lerp(fpvOffsetY, 0, decayAlpha);
-        }
-
-        const maxScale = Math.min(1.5, Math.max(1, elevationMeters / 15_000));
-        const maxOffset = 0.45 * maxScale * Math.min(canvasW, canvasH);
-        fpvOffsetX = Math.max(-maxOffset, Math.min(maxOffset, fpvOffsetX));
-        fpvOffsetY = Math.max(-maxOffset, Math.min(maxOffset, fpvOffsetY));
+        const offsetAlpha = 0.08 * trackingStrength;
+        fpvOffsetX = lerp(fpvOffsetX, 0, offsetAlpha);
+        fpvOffsetY = lerp(fpvOffsetY, desiredOffsetY, offsetAlpha);
 
         const currentBearing = map.getBearing();
         const bearingToCurrent =
