@@ -160,39 +160,10 @@ export default function LandingPage() {
                                 <div className="aspect-square rounded-[2rem] bg-gradient-to-tr from-[#0D4D82]/20 to-transparent border border-[#0D5587]/30 p-8 relative overflow-hidden group flex items-center justify-center">
                                     <div className="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
                                     <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        {/* Realistic 3D App UI Mockup */}
-                                        <div className="relative z-10 w-full h-full flex items-center justify-center perspective-[1000px]">
-                                            {/* 3D Stack */}
-                                            <div
-                                                className="relative w-full aspect-square max-w-[280px] transform-gpu transition-transform duration-1000 ease-out group-hover:-translate-y-4"
-                                                style={{ transformStyle: 'preserve-3d', transform: 'rotateX(60deg) rotateZ(-45deg)' }}
-                                            >
-                                                {/* Low Altitude Layer */}
-                                                <div className="absolute inset-0 border border-[rgb(72,210,160)]/30 bg-[rgb(72,210,160)]/5 rounded-3xl transition-transform duration-1000 group-hover:-translate-x-2 group-hover:translate-y-2" style={{ transform: 'translateZ(0px)' }} />
-                                                <Plane className="absolute top-[40%] left-[20%] w-8 h-8 text-[rgb(72,210,160)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(20px) rotate(-45deg)' }} fill="currentColor" />
-
-                                                {/* Mid Altitude Layer */}
-                                                <div className="absolute inset-0 border border-[rgb(240,110,80)]/30 bg-[rgb(240,110,80)]/5 rounded-3xl" style={{ transform: 'translateZ(60px)' }} />
-                                                <Plane className="absolute top-[60%] left-[60%] w-8 h-8 text-[rgb(240,110,80)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(80px) rotate(-45deg)', animationDelay: '1s' }} fill="currentColor" />
-
-                                                {/* High Altitude Layer */}
-                                                <div className="absolute inset-0 border border-[rgb(100,170,240)]/30 bg-[rgb(100,170,240)]/5 rounded-3xl transition-transform duration-1000 group-hover:translate-x-2 group-hover:-translate-y-2" style={{ transform: 'translateZ(120px)' }} />
-                                                <Plane className="absolute top-[20%] left-[30%] w-8 h-8 text-[rgb(100,170,240)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(140px) rotate(-45deg)', animationDelay: '2s' }} fill="currentColor" />
-                                            </div>
-
-                                            {/* Mini Legend */}
-                                            <div className="absolute bottom-6 right-6 flex flex-col gap-1 rounded-xl border border-white/10 bg-[#050505]/80 p-3 backdrop-blur-xl">
-                                                <p className="text-[9px] font-semibold tracking-widest text-white/40 uppercase mb-1">Altitude</p>
-                                                <div className="flex items-center gap-2">
-                                                    <div className="h-24 w-1.5 rounded-full" style={{ background: "linear-gradient(to top, rgb(72,210,160), rgb(160,195,80), rgb(235,150,60), rgb(240,110,80), rgb(220,85,130), rgb(180,90,190), rgb(120,110,220), rgb(100,170,240))" }} />
-                                                    <div className="flex h-24 flex-col justify-between text-[9px] font-medium text-white/50">
-                                                        <span>43,000 ft</span>
-                                                        <span>20,000 ft</span>
-                                                        <span>10,000 ft</span>
-                                                        <span>0 ft</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Realistic App Screenshot */}
+                                        <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:border-white/20 transition-colors duration-500">
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-[#0D4D82]/30 to-transparent pointer-events-none mix-blend-overlay z-10"></div>
+                                            <img src="/mockup-app.png" alt="SkyPulse 3D Altitude Tracking Map" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                                         </div>
                                     </div>
                                 </div>
