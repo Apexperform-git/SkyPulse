@@ -96,19 +96,16 @@ export default function LandingPage() {
                             <motion.div style={{ y: yHeroImage }} className="relative w-full aspect-[4/5] rounded-[2.5rem] bg-gradient-to-b from-white/5 to-white/[0.01] border border-white/10 shadow-2xl overflow-hidden backdrop-blur-3xl p-2">
                                 <div className="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
                                 <div className="h-full w-full rounded-[2rem] bg-black/50 overflow-hidden relative flex flex-col items-center justify-center group border border-white/5">
-                                    {/* Simulated App UI Glow */}
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#0D4D82]/40 blur-[80px] rounded-full group-hover:bg-[#F18E22]/20 transition-colors duration-700" />
-
-                                    <Image
-                                        src="/logo.svg"
+                                    {/* App Screenshot */}
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-[#0D4D82]/30 to-transparent pointer-events-none mix-blend-overlay z-20"></div>
+                                    <img
+                                        src="/mockup-app.png"
                                         alt="SkyPulse App Interface 3D Map"
-                                        width={200}
-                                        height={200}
-                                        className="drop-shadow-[0_0_30px_rgba(241,142,34,0.3)] z-10 group-hover:scale-105 transition-transform duration-700 ease-out"
+                                        className="absolute inset-0 w-full h-full object-cover z-10 group-hover:scale-105 transition-transform duration-700 ease-out"
                                     />
 
                                     {/* Mock UI Elements floating */}
-                                    <div className="absolute bottom-10 left-6 right-6 h-20 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-4 flex items-center gap-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                    <div className="absolute bottom-10 left-6 right-6 h-20 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-4 flex items-center gap-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-30">
                                         <div className="w-12 h-12 rounded-xl bg-[#0D4D82]/50 flex items-center justify-center">
                                             <Plane className="w-6 h-6 text-white" />
                                         </div>
@@ -160,10 +157,16 @@ export default function LandingPage() {
                                 <div className="aspect-square rounded-[2rem] bg-gradient-to-tr from-[#0D4D82]/20 to-transparent border border-[#0D5587]/30 p-8 relative overflow-hidden group flex items-center justify-center">
                                     <div className="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
                                     <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        {/* Realistic App Screenshot */}
-                                        <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl group-hover:border-white/20 transition-colors duration-500">
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-[#0D4D82]/30 to-transparent pointer-events-none mix-blend-overlay z-10"></div>
-                                            <img src="/mockup-app.png" alt="SkyPulse 3D Altitude Tracking Map" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                                        {/* Logo Representation */}
+                                        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center perspective-[1000px]">
+                                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#0D4D82]/40 blur-[80px] rounded-full group-hover:bg-[#F18E22]/20 transition-colors duration-700" />
+                                            <Image
+                                                src="/logo.svg"
+                                                alt="SkyPulse App Logo"
+                                                width={200}
+                                                height={200}
+                                                className="drop-shadow-[0_0_30px_rgba(241,142,34,0.3)] z-10 group-hover:scale-110 transition-transform duration-700 ease-out"
+                                            />
                                         </div>
                                     </div>
                                 </div>
