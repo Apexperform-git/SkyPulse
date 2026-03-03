@@ -21,7 +21,7 @@ export default function LandingPage() {
             <main className="relative z-10">
                 {/* Navbar */}
                 <nav className="fixed top-0 inset-x-0 z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 transition-all">
-                    <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="max-w-[1440px] mx-auto px-6 h-20 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <Image src="/logo.svg" alt="SkyPulse 3D Live Flight Tracker Logo" width={40} height={40} className="drop-shadow-lg" />
                             <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300">
@@ -40,13 +40,13 @@ export default function LandingPage() {
                 </nav>
 
                 {/* Hero Section */}
-                <section className="pt-40 pb-20 sm:pt-48 sm:pb-32 px-6 lg:px-8 max-w-7xl mx-auto">
+                <section className="pt-40 pb-20 sm:pt-48 sm:pb-32 px-6 lg:px-8 max-w-[1440px] mx-auto">
                     <div className="lg:flex lg:items-center lg:gap-16">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="lg:w-[55%] text-center lg:text-left z-20"
+                            className="lg:w-[50%] text-center lg:text-left z-20"
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#0D4D82]/40 to-[#0D4D82]/10 border border-[#0D5587]/50 text-[#F18E22] text-sm font-medium mb-8 shadow-inner shadow-[#0D5587]/20">
                                 <span className="relative flex h-2 w-2">
@@ -91,9 +91,9 @@ export default function LandingPage() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-                            className="mt-20 lg:mt-0 lg:w-[45%] relative z-10 hidden lg:block"
+                            className="mt-20 lg:mt-0 lg:w-[50%] relative z-10 hidden lg:block"
                         >
-                            <motion.div style={{ y: yHeroImage }} className="relative w-full aspect-[4/5] rounded-[2.5rem] bg-gradient-to-b from-white/5 to-white/[0.01] border border-white/10 shadow-2xl overflow-hidden backdrop-blur-3xl p-2">
+                            <motion.div style={{ y: yHeroImage }} className="relative w-full aspect-square rounded-[2.5rem] bg-gradient-to-b from-white/5 to-white/[0.01] border border-white/10 shadow-2xl overflow-hidden backdrop-blur-3xl p-2 md:p-4">
                                 <div className="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
                                 <div className="h-full w-full rounded-[2rem] bg-black/50 overflow-hidden relative flex flex-col items-center justify-center group border border-white/5">
                                     {/* App Screenshot */}
@@ -125,7 +125,7 @@ export default function LandingPage() {
 
                 {/* Social Proof / Trusted Partners */}
                 <section className="py-10 border-y border-white/5 bg-white/[0.01]">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div className="max-w-[1440px] mx-auto px-6 lg:px-8">
                         <p className="text-center text-sm font-medium text-gray-500 uppercase tracking-widest mb-8">
                             Powered by global aviation data networks
                         </p>
@@ -149,7 +149,7 @@ export default function LandingPage() {
 
                 {/* Z-Pattern Deep Dive Features */}
                 <section id="features" className="py-32 relative">
-                    <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-32">
+                    <div className="max-w-[1440px] mx-auto px-6 lg:px-8 space-y-32">
 
                         {/* Feature 1 */}
                         <div className="flex flex-col lg:flex-row items-center gap-16">
