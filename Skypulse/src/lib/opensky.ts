@@ -1,6 +1,16 @@
 /** @see https://openskynetwork.github.io/opensky-api/rest.html */
 
+import { Capacitor } from "@capacitor/core";
+
 const OPENSKY_API = "https://opensky-network.org/api";
+
+function getApiUrl(path: string) {
+  if (Capacitor.isNativePlatform()) {
+    return `https://skypulse.live${path}`;
+  }
+  return path;
+}
+
 
 // Token cache
 let cachedToken: { accessToken: string; expiresAt: number } | null = null;
@@ -12,7 +22,7 @@ async function getAccessToken(): Promise<string | null> {
   }
 
   try {
-    const res = await fetch("/api/opensky/token", {
+    const res = await fetch(getApiUrl("/api/opensky/token"), {
       method: "GET",
       cache: "no-store",
     });

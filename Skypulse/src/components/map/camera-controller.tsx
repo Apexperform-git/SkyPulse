@@ -307,17 +307,6 @@ export function CameraController({
         const center = map.getCenter();
         const centerAlpha = FPV_CENTER_ALPHA * trackingStrength;
 
-        // Instead of unpredictably projecting pixel deltas (which bounces violently 
-        // as the plane's altitude fluctuates along the mesh), smoothly animate to a 
-        // fixed vertical offset to keep the plane in the bottom 1/4 of the screen.
-        const canvas = map.getCanvas();
-        const canvasH = Math.max(1, canvas.clientHeight);
-        const desiredOffsetY = canvasH * 0.15; // Shift center up so plane is slightly lower
-
-        const offsetAlpha = 0.08 * trackingStrength;
-        fpvOffsetX = lerp(fpvOffsetX, 0, offsetAlpha);
-        fpvOffsetY = lerp(fpvOffsetY, desiredOffsetY, offsetAlpha);
-
         const currentBearing = map.getBearing();
         const bearingToCurrent =
           ((prevBearing - currentBearing + 540) % 360) - 180;
@@ -338,7 +327,6 @@ export function CameraController({
             bearing: newMapBearing,
             zoom: smoothZoom,
             pitch: newPitch,
-            offset: [fpvOffsetX, fpvOffsetY],
             duration: 0,
             animate: false,
             essential: true,

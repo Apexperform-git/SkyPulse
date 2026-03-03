@@ -3,6 +3,14 @@
  */
 
 import { AIRPORTS, type Airport } from "./airports";
+import { Capacitor } from "@capacitor/core";
+
+function getApiUrl(path: string) {
+  if (Capacitor.isNativePlatform()) {
+    return `https://skypulse.live${path}`;
+  }
+  return path;
+}
 
 export type Route = {
   airlineIcao: string;
@@ -41,7 +49,7 @@ export async function lookupRoute(callsign: string | null): Promise<Route | null
   const airlineIcao = normalized.length >= 3 ? normalized.substring(0, 3) : normalized;
 
   try {
-    const res = await fetch(`/api/flight/route?callsign=${encodeURIComponent(normalized)}`);
+    const res = await fetch(getApiUrl(`/api/flight/route?callsign=${encodeURIComponent(normalized)}`));
 
     if (!res.ok) {
       // Don't cache hard 500s or 401s if API key is invalid so it can retry later
