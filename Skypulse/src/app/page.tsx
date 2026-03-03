@@ -160,37 +160,40 @@ export default function LandingPage() {
                                 <div className="aspect-square rounded-[2rem] bg-gradient-to-tr from-[#0D4D82]/20 to-transparent border border-[#0D5587]/30 p-8 relative overflow-hidden group flex items-center justify-center">
                                     <div className="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
                                     <div className="relative z-10 w-full h-full flex items-center justify-center">
-                                        {/* Abstract 3D Map Stack Illustration */}
-                                        <svg viewBox="0 0 200 200" className="w-full h-full transform group-hover:rotate-6 transition-transform duration-700 ease-out" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            {/* Layers */}
-                                            <path d="M100 130L30 95L100 60L170 95L100 130Z" fill="url(#grad1)" stroke="#0D5587" strokeWidth="2" />
-                                            <path d="M100 160L30 125L100 90L170 125L100 160Z" fill="url(#grad2)" stroke="#0D5587" strokeWidth="2" opacity="0.6" />
-                                            <path d="M100 190L30 155L100 120L170 155L100 190Z" fill="url(#grad3)" stroke="#0D5587" strokeWidth="2" opacity="0.3" />
-                                            {/* Flying Planes */}
-                                            <g className="animate-pulse" style={{ animationDuration: '3s' }}>
-                                                <circle cx="80" cy="75" r="3" fill="#F18E22" />
-                                                <line x1="80" y1="75" x2="110" y2="75" stroke="#F18E22" strokeWidth="1" strokeDasharray="2 2" />
-                                            </g>
-                                            <g className="animate-pulse" style={{ animationDelay: '1s', animationDuration: '4s' }}>
-                                                <circle cx="130" cy="115" r="3" fill="#F18E22" />
-                                                <line x1="130" y1="115" x2="90" y2="100" stroke="#F18E22" strokeWidth="1" strokeDasharray="2 2" />
-                                            </g>
+                                        {/* Realistic 3D App UI Mockup */}
+                                        <div className="relative z-10 w-full h-full flex items-center justify-center perspective-[1000px]">
+                                            {/* 3D Stack */}
+                                            <div
+                                                className="relative w-full aspect-square max-w-[280px] transform-gpu transition-transform duration-1000 ease-out group-hover:-translate-y-4"
+                                                style={{ transformStyle: 'preserve-3d', transform: 'rotateX(60deg) rotateZ(-45deg)' }}
+                                            >
+                                                {/* Low Altitude Layer */}
+                                                <div className="absolute inset-0 border border-[rgb(72,210,160)]/30 bg-[rgb(72,210,160)]/5 rounded-3xl transition-transform duration-1000 group-hover:-translate-x-2 group-hover:translate-y-2" style={{ transform: 'translateZ(0px)' }} />
+                                                <Plane className="absolute top-[40%] left-[20%] w-8 h-8 text-[rgb(72,210,160)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(20px) rotate(-45deg)' }} fill="currentColor" />
 
-                                            <defs>
-                                                <linearGradient id="grad1" x1="100" y1="60" x2="100" y2="130" gradientUnits="userSpaceOnUse">
-                                                    <stop stopColor="#0D4D82" stopOpacity="0.8" />
-                                                    <stop offset="1" stopColor="#050505" stopOpacity="0.2" />
-                                                </linearGradient>
-                                                <linearGradient id="grad2" x1="100" y1="90" x2="100" y2="160" gradientUnits="userSpaceOnUse">
-                                                    <stop stopColor="#0D4D82" stopOpacity="0.5" />
-                                                    <stop offset="1" stopColor="#050505" stopOpacity="0.1" />
-                                                </linearGradient>
-                                                <linearGradient id="grad3" x1="100" y1="120" x2="100" y2="190" gradientUnits="userSpaceOnUse">
-                                                    <stop stopColor="#0D4D82" stopOpacity="0.2" />
-                                                    <stop offset="1" stopColor="#050505" stopOpacity="0.0" />
-                                                </linearGradient>
-                                            </defs>
-                                        </svg>
+                                                {/* Mid Altitude Layer */}
+                                                <div className="absolute inset-0 border border-[rgb(240,110,80)]/30 bg-[rgb(240,110,80)]/5 rounded-3xl" style={{ transform: 'translateZ(60px)' }} />
+                                                <Plane className="absolute top-[60%] left-[60%] w-8 h-8 text-[rgb(240,110,80)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(80px) rotate(-45deg)', animationDelay: '1s' }} fill="currentColor" />
+
+                                                {/* High Altitude Layer */}
+                                                <div className="absolute inset-0 border border-[rgb(100,170,240)]/30 bg-[rgb(100,170,240)]/5 rounded-3xl transition-transform duration-1000 group-hover:translate-x-2 group-hover:-translate-y-2" style={{ transform: 'translateZ(120px)' }} />
+                                                <Plane className="absolute top-[20%] left-[30%] w-8 h-8 text-[rgb(100,170,240)] drop-shadow-2xl animate-pulse" style={{ transform: 'translateZ(140px) rotate(-45deg)', animationDelay: '2s' }} fill="currentColor" />
+                                            </div>
+
+                                            {/* Mini Legend */}
+                                            <div className="absolute bottom-6 right-6 flex flex-col gap-1 rounded-xl border border-white/10 bg-[#050505]/80 p-3 backdrop-blur-xl">
+                                                <p className="text-[9px] font-semibold tracking-widest text-white/40 uppercase mb-1">Altitude</p>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-24 w-1.5 rounded-full" style={{ background: "linear-gradient(to top, rgb(72,210,160), rgb(160,195,80), rgb(235,150,60), rgb(240,110,80), rgb(220,85,130), rgb(180,90,190), rgb(120,110,220), rgb(100,170,240))" }} />
+                                                    <div className="flex h-24 flex-col justify-between text-[9px] font-medium text-white/50">
+                                                        <span>43,000 ft</span>
+                                                        <span>20,000 ft</span>
+                                                        <span>10,000 ft</span>
+                                                        <span>0 ft</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
