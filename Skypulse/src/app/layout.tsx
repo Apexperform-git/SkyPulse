@@ -155,7 +155,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (window.Capacitor && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
+              if ((window.Capacitor || navigator.userAgent.includes('Capacitor')) && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
                 document.documentElement.style.display = 'none';
                 window.location.replace('/map.html');
               }

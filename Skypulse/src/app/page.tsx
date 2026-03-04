@@ -14,19 +14,27 @@ export default function LandingPage() {
     const router = useRouter();
     const [isNative, setIsNative] = useState(() => {
         if (typeof window !== "undefined") {
-            return Capacitor.isNativePlatform();
+            return (window as any).Capacitor !== undefined || navigator.userAgent.includes("Capacitor");
         }
-        return false;
+        return true; // Default to true during SSR to prevent flash, then adjust
     });
 
+    // We need a second state to confirm Web so we don't accidentally show a black screen forever on Desktop SSR
+    const [isWebConfirmed, setIsWebConfirmed] = useState(false);
+
     useEffect(() => {
-        if (isNative) {
+        if (Capacitor.isNativePlatform() || navigator.userAgent.includes("Capacitor")) {
+            setIsNative(true);
             router.replace("/map");
+        } else {
+            setIsNative(false);
+            setIsWebConfirmed(true);
         }
-    }, [isNative, router]);
+    }, [router]);
 
     // Unconditionally block rendering the heavy marketing site if we know we're on mobile
-    if (isNative) {
+    // Or if we haven't confirmed it's Web yet (to prevent SSR flash on mobile)
+    if (isNative || !isWebConfirmed) {
         return (
             <div className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center">
                 {/* Optional subtle loading indicator if jumping to /map takes a split second */}
