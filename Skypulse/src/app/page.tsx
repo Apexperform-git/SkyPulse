@@ -12,17 +12,27 @@ export default function LandingPage() {
     const { scrollYProgress } = useScroll();
     const yHeroImage = useTransform(scrollYProgress, [0, 1], [0, 50]);
     const router = useRouter();
-    const [isNative, setIsNative] = useState(false);
+    const [isNative, setIsNative] = useState(() => {
+        if (typeof window !== "undefined") {
+            return Capacitor.isNativePlatform();
+        }
+        return false;
+    });
 
     useEffect(() => {
-        if (Capacitor.isNativePlatform()) {
-            setIsNative(true);
+        if (isNative) {
             router.replace("/map");
         }
-    }, [router]);
+    }, [isNative, router]);
 
+    // Unconditionally block rendering the heavy marketing site if we know we're on mobile
     if (isNative) {
-        return <div className="min-h-screen bg-[#050505]" />;
+        return (
+            <div className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center">
+                {/* Optional subtle loading indicator if jumping to /map takes a split second */}
+                <div className="w-8 h-8 rounded-full border-4 border-[#F18E22]/30 border-t-[#F18E22] animate-spin" />
+            </div>
+        );
     }
 
     return (
