@@ -15,12 +15,11 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                     await AdMob.initialize();
                     initialized.current = true;
 
-                    // Listen for the actual banner height so we can push the app content down
+                    // Listen for actual banner height and convert native px → CSS px
                     await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                        // Read the status-bar height that CSS exposes via env(safe-area-inset-top)
-                        const satStr = getComputedStyle(document.documentElement).getPropertyValue("--sat").trim();
-                        const sat = parseFloat(satStr) || 0;
-                        document.documentElement.style.setProperty("--ad-banner-height", `${size.height + sat}px`);
+                        const dpr = window.devicePixelRatio || 1;
+                        const heightCssPx = Math.ceil(size.height / dpr);
+                        document.documentElement.style.setProperty("--ad-banner-height", `${heightCssPx}px`);
                     });
 
                     const options: BannerAdOptions = {
