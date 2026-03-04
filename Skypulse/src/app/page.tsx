@@ -4,11 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, Globe, Layers, Plane, Zap, ShieldCheck, ChevronDown, CheckCircle2, Star, Smartphone, Code, Github } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Capacitor } from "@capacitor/core";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
     const { scrollYProgress } = useScroll();
     const yHeroImage = useTransform(scrollYProgress, [0, 1], [0, 50]);
+    const router = useRouter();
+    const [isNative, setIsNative] = useState(false);
+
+    useEffect(() => {
+        if (Capacitor.isNativePlatform()) {
+            setIsNative(true);
+            router.replace("/map");
+        }
+    }, [router]);
+
+    if (isNative) {
+        return <div className="min-h-screen bg-[#050505]" />;
+    }
 
     return (
         <div className="min-h-screen bg-[#050505] text-white selection:bg-[#F18E22] selection:text-white overflow-hidden font-sans">
