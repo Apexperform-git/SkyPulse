@@ -11,6 +11,8 @@
   --ring: 0 0% 30%;
   --radius: 0.625rem;
   --ad-banner-height: 0px;
+  /* Exposes env(safe-area-inset-top) so JS can read it via getComputedStyle */
+  --sat: env(safe-area-inset-top, 0px);
 }
 
 @theme inline {

@@ -17,7 +17,10 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
 
                     // Listen for the actual banner height so we can push the app content down
                     await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                        document.documentElement.style.setProperty("--ad-banner-height", `${size.height}px`);
+                        // Read the status-bar height that CSS exposes via env(safe-area-inset-top)
+                        const satStr = getComputedStyle(document.documentElement).getPropertyValue("--sat").trim();
+                        const sat = parseFloat(satStr) || 0;
+                        document.documentElement.style.setProperty("--ad-banner-height", `${size.height + sat}px`);
                     });
 
                     const options: BannerAdOptions = {
