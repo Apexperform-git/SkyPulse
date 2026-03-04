@@ -16,9 +16,8 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                     initialized.current = true;
 
                     listenerHandle.current = await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                        // Use margin-top on the root HTML element instead of body padding for better fixed element pushdown
-                        document.documentElement.style.marginTop = `${size.height}px`;
-                        document.documentElement.style.height = `calc(100% - ${size.height}px)`;
+                        // Set a global CSS variable so the entire app can shrink/offset correctly
+                        document.documentElement.style.setProperty("--ad-banner-height", `${size.height}px`);
                     });
 
                     const options: BannerAdOptions = {
@@ -46,8 +45,7 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                 }
                 AdMob.hideBanner().catch(console.error);
                 AdMob.removeBanner().catch(console.error);
-                document.documentElement.style.marginTop = "0px";
-                document.documentElement.style.height = "100%";
+                document.documentElement.style.setProperty("--ad-banner-height", "0px");
             }
         };
     }, []);
