@@ -152,8 +152,19 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.Capacitor && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
+                document.documentElement.style.display = 'none';
+                window.location.replace('/map.html');
+              }
+            `,
+          }}
+        />
       </head>
-      <body className={`${inter.variable} font-sans antialiased overflow-x-hidden`}>
+      <body
+        className={`${inter.variable} font-sans antialiased text-white scrollbar-none bg-[#050505]`}>
         <NativeAppBypass />
         <AdMobProvider>
           {children}
