@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Capacitor } from "@capacitor/core";
-import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition } from "@capacitor-community/admob";
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, BannerAdPluginEvents, AdMobBannerSize } from "@capacitor-community/admob";
 
 export function AdMobProvider({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
@@ -15,10 +15,15 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                     await AdMob.initialize();
                     initialized.current = true;
 
+                    // Listen for the actual banner height so we can push the app content down
+                    await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
+                        document.documentElement.style.setProperty("--ad-banner-height", `${size.height}px`);
+                    });
+
                     const options: BannerAdOptions = {
                         adId: "ca-app-pub-2675217460226988/5408867908",
                         adSize: BannerAdSize.ADAPTIVE_BANNER,
-                        position: BannerAdPosition.BOTTOM_CENTER,
+                        position: BannerAdPosition.TOP_CENTER,
                         margin: 0,
                         isTesting: true,
                     };
@@ -36,6 +41,7 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
             if (Capacitor.isNativePlatform() && initialized.current) {
                 AdMob.hideBanner().catch(console.error);
                 AdMob.removeBanner().catch(console.error);
+                document.documentElement.style.setProperty("--ad-banner-height", "0px");
             }
         };
     }, []);

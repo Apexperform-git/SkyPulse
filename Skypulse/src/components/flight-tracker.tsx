@@ -914,7 +914,8 @@ function FlightTrackerInner() {
 
       <div
         data-map-theme={mapStyle.dark ? "dark" : "light"}
-        className="pointer-events-none absolute inset-0 z-10"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10"
+        style={{ top: "var(--ad-banner-height, 0px)" }}
       >
         {!fpvIcao24 && (
           <div className="pointer-events-auto absolute left-3 top-3 flex items-center gap-3 sm:left-4 sm:top-4">
