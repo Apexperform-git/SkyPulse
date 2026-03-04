@@ -19,7 +19,7 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                         adSize: BannerAdSize.BANNER,
                         position: BannerAdPosition.TOP_CENTER,
                         margin: 0,
-                        isTesting: false,
+                        isTesting: true,
                     };
 
                     await AdMob.showBanner(options);
