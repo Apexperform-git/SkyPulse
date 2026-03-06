@@ -15,32 +15,44 @@ function setAdHeight(px: number) {
 
 export function AdMobProvider({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
+    const heightRef = useRef(56);
 
     useEffect(() => {
+        if (!Capacitor.isNativePlatform()) return;
+
+        // On mount, apply the last known height immediately (56 default)
+        setAdHeight(heightRef.current);
+
         async function initAdMob() {
-            if (!Capacitor.isNativePlatform() || initialized.current) return;
-            try {
-                await AdMob.initialize();
-                initialized.current = true;
-
-                // Pre-set a conservative estimate so the HUD is already shifted BEFORE
-                // the banner appears. ADAPTIVE_BANNER on a phone ≈ 56 CSS dp.
-                setAdHeight(56);
-
-                // Register SizeChanged BEFORE showBanner to avoid race conditions
-                await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                    setAdHeight(nativeToCss(size.height));
-                });
-
-                const options: BannerAdOptions = {
+            if (initialized.current) {
+                // Already initialized (e.g. Strict Mode second pass), just re-show
+                AdMob.showBanner({
                     adId: "ca-app-pub-2675217460226988/5408867908",
                     adSize: BannerAdSize.ADAPTIVE_BANNER,
                     position: BannerAdPosition.TOP_CENTER,
                     margin: 0,
                     isTesting: true,
-                };
+                }).catch(console.error);
+                return;
+            }
 
-                await AdMob.showBanner(options);
+            try {
+                await AdMob.initialize();
+                initialized.current = true;
+
+                await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
+                    const h = nativeToCss(size.height);
+                    heightRef.current = h;
+                    setAdHeight(h);
+                });
+
+                await AdMob.showBanner({
+                    adId: "ca-app-pub-2675217460226988/5408867908",
+                    adSize: BannerAdSize.ADAPTIVE_BANNER,
+                    position: BannerAdPosition.TOP_CENTER,
+                    margin: 0,
+                    isTesting: true,
+                });
             } catch (error) {
                 console.error("AdMob init failed:", error);
                 setAdHeight(0);
@@ -50,11 +62,9 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
         initAdMob();
 
         return () => {
-            if (Capacitor.isNativePlatform() && initialized.current) {
-                AdMob.hideBanner().catch(console.error);
-                AdMob.removeBanner().catch(console.error);
-                setAdHeight(0);
-            }
+            // Unmount: hide banner and reset CSS space so the UI pops back up
+            AdMob.hideBanner().catch(console.error);
+            setAdHeight(0);
         };
     }, []);
 
