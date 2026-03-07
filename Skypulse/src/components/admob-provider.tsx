@@ -4,18 +4,13 @@ import { useEffect, useRef } from "react";
 import { Capacitor } from "@capacitor/core";
 import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, BannerAdPluginEvents, AdMobBannerSize } from "@capacitor-community/admob";
 
-// Helper to convert native Android px → CSS px
-function nativeToCss(nativePx: number): number {
-    return Math.ceil(nativePx / (window.devicePixelRatio || 1));
-}
-
 function setAdHeight(px: number) {
     document.documentElement.style.setProperty("--ad-banner-height", `${px}px`);
 }
 
 export function AdMobProvider({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
-    const heightRef = useRef(56);
+    const heightRef = useRef(60);
 
     useEffect(() => {
         if (!Capacitor.isNativePlatform()) return;
@@ -41,9 +36,8 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                 initialized.current = true;
 
                 await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                    const h = nativeToCss(size.height);
-                    heightRef.current = h;
-                    setAdHeight(h);
+                    heightRef.current = size.height;
+                    setAdHeight(size.height);
                 });
 
                 await AdMob.showBanner({
