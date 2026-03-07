@@ -915,81 +915,87 @@ function FlightTrackerInner() {
       <div
         data-map-theme={mapStyle.dark ? "dark" : "light"}
         className="pointer-events-none absolute inset-0 z-10"
-        style={{ paddingTop: "var(--ad-banner-height, 0px)" }}
       >
-        <div className="relative h-full w-full">
-          {!fpvIcao24 && (
-            <div className="pointer-events-auto absolute left-3 top-3 flex items-center gap-3 sm:left-4 sm:top-4">
-              <Brand isDark={mapStyle.dark} />
-            </div>
-          )}
+        {!fpvIcao24 && (
+          <div
+            className="pointer-events-auto absolute left-3 flex items-center gap-3 sm:left-4"
+            style={{ top: "calc(max(env(safe-area-inset-top, 0px), 36px) + var(--ad-banner-height, 0px) + 12px)" }}
+          >
+            <Brand isDark={mapStyle.dark} />
+          </div>
+        )}
 
-          {!fpvIcao24 && (
-            <div className="pointer-events-auto absolute left-3 top-14 sm:left-4 sm:top-16">
-              <FlightCard
-                flight={displayFlight}
-                onClose={handleDeselectFlight}
-                onToggleFpv={handleToggleFpv}
-                isFpvActive={
-                  fpvIcao24 !== null && fpvIcao24 === displayFlight?.icao24
-                }
-              />
-            </div>
-          )}
+        {!fpvIcao24 && (
+          <div
+            className="pointer-events-auto absolute left-3 sm:left-4"
+            style={{ top: "calc(max(env(safe-area-inset-top, 0px), 36px) + var(--ad-banner-height, 0px) + 56px)" }}
+          >
+            <FlightCard
+              flight={displayFlight}
+              onClose={handleDeselectFlight}
+              onToggleFpv={handleToggleFpv}
+              isFpvActive={
+                fpvIcao24 !== null && fpvIcao24 === displayFlight?.icao24
+              }
+            />
+          </div>
+        )}
 
-          {!fpvIcao24 && (
-            <div className="pointer-events-auto absolute right-3 top-3 flex items-center gap-1.5 sm:right-4 sm:top-4 sm:gap-2">
-              <motion.button
-                onClick={handleToggleHelp}
-                className="hidden h-9 w-9 items-center justify-center rounded-xl backdrop-blur-2xl transition-colors sm:flex"
-                style={{
-                  borderWidth: 1,
-                  borderColor: "rgb(var(--ui-fg) / 0.06)",
-                  backgroundColor: "rgb(var(--ui-fg) / 0.03)",
-                  color: "rgb(var(--ui-fg) / 0.5)",
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Keyboard shortcuts"
-                title="Keyboard shortcuts (?)"
-              >
-                <Keyboard className="h-4 w-4" />
-              </motion.button>
-              <ControlPanel
-                activeCity={activeCity}
-                onSelectCity={setActiveCity}
-                activeStyle={mapStyle}
-                onSelectStyle={setMapStyle}
-                flights={displayFlights}
-                activeFlightIcao24={selectedIcao24}
-                onLookupFlight={handleLookupFlight}
-              />
-            </div>
-          )}
+        {!fpvIcao24 && (
+          <div
+            className="pointer-events-auto absolute right-3 flex items-center gap-1.5 sm:right-4 sm:gap-2"
+            style={{ top: "calc(max(env(safe-area-inset-top, 0px), 36px) + var(--ad-banner-height, 0px) + 12px)" }}
+          >
+            <motion.button
+              onClick={handleToggleHelp}
+              className="hidden h-9 w-9 items-center justify-center rounded-xl backdrop-blur-2xl transition-colors sm:flex"
+              style={{
+                borderWidth: 1,
+                borderColor: "rgb(var(--ui-fg) / 0.06)",
+                backgroundColor: "rgb(var(--ui-fg) / 0.03)",
+                color: "rgb(var(--ui-fg) / 0.5)",
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Keyboard shortcuts"
+              title="Keyboard shortcuts (?)"
+            >
+              <Keyboard className="h-4 w-4" />
+            </motion.button>
+            <ControlPanel
+              activeCity={activeCity}
+              onSelectCity={setActiveCity}
+              activeStyle={mapStyle}
+              onSelectStyle={setMapStyle}
+              flights={displayFlights}
+              activeFlightIcao24={selectedIcao24}
+              onLookupFlight={handleLookupFlight}
+            />
+          </div>
+        )}
 
-          {!fpvIcao24 && (
-            <div className="pointer-events-auto absolute bottom-[env(safe-area-inset-bottom,0px)] left-3 mb-3 sm:bottom-4 sm:left-4 sm:mb-0">
-              <StatusBar
-                flightCount={flights.length}
-                cityName={activeCity.name}
-                loading={loading}
-                rateLimited={rateLimited}
-                retryIn={retryIn}
-                onNorthUp={handleNorthUp}
-                onResetView={handleResetView}
-                onRandomAirport={handleRandomAirport}
-              />
-            </div>
-          )}
+        {!fpvIcao24 && (
+          <div className="pointer-events-auto absolute bottom-[env(safe-area-inset-bottom,0px)] left-3 mb-3 sm:bottom-4 sm:left-4 sm:mb-0">
+            <StatusBar
+              flightCount={flights.length}
+              cityName={activeCity.name}
+              loading={loading}
+              rateLimited={rateLimited}
+              retryIn={retryIn}
+              onNorthUp={handleNorthUp}
+              onResetView={handleResetView}
+              onRandomAirport={handleRandomAirport}
+            />
+          </div>
+        )}
 
-          {!fpvIcao24 && (
-            <div className="pointer-events-auto absolute bottom-[env(safe-area-inset-bottom,0px)] right-3 mb-3 flex flex-col items-end gap-2 sm:bottom-4 sm:right-4 sm:mb-0">
-              <CameraControls />
-              <AltitudeLegend />
-              <MapAttribution styleId={mapStyle.id} />
-            </div>
-          )}
-        </div>
+        {!fpvIcao24 && (
+          <div className="pointer-events-auto absolute bottom-[env(safe-area-inset-bottom,0px)] right-3 mb-3 flex flex-col items-end gap-2 sm:bottom-4 sm:right-4 sm:mb-0">
+            <CameraControls />
+            <AltitudeLegend />
+            <MapAttribution styleId={mapStyle.id} />
+          </div>
+        )}
       </div>
 
       {!fpvIcao24 && (
