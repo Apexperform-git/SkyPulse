@@ -10,56 +10,44 @@ function setAdHeight(px: number) {
 
 export function AdMobProvider({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
-    const heightRef = useRef(60);
 
     useEffect(() => {
-        if (!Capacitor.isNativePlatform()) return;
-
-        // On mount, apply the last known height immediately (56 default)
-        setAdHeight(heightRef.current);
+        if (!Capacitor.isNativePlatform() || initialized.current) return;
 
         async function initAdMob() {
-            if (initialized.current) {
-                // Already initialized (e.g. Strict Mode second pass), just re-show
-                AdMob.showBanner({
-                    adId: "ca-app-pub-2675217460226988/5408867908",
-                    adSize: BannerAdSize.ADAPTIVE_BANNER,
-                    position: BannerAdPosition.TOP_CENTER,
-                    margin: 0,
-                    isTesting: true,
-                }).catch(console.error);
-                return;
-            }
-
             try {
+                // Instantly push UI down 60px before we even ask AdMob to load
+                setAdHeight(60);
+
                 await AdMob.initialize();
                 initialized.current = true;
 
                 await AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size: AdMobBannerSize) => {
-                    heightRef.current = size.height;
-                    setAdHeight(size.height);
+                    // Ignore 0-height collapses (e.g., when an ad fails to refresh temporarily)
+                    if (size.height > 0) {
+                        setAdHeight(size.height);
+                    }
                 });
 
-                await AdMob.showBanner({
+                const options: BannerAdOptions = {
                     adId: "ca-app-pub-2675217460226988/5408867908",
                     adSize: BannerAdSize.ADAPTIVE_BANNER,
                     position: BannerAdPosition.TOP_CENTER,
                     margin: 0,
                     isTesting: true,
-                });
+                };
+
+                await AdMob.showBanner(options);
             } catch (error) {
                 console.error("AdMob init failed:", error);
-                setAdHeight(0);
+                // Keep the 60px padding even if it fails, so we don't snap up and down
             }
         }
 
         initAdMob();
 
-        return () => {
-            // Unmount: hide banner and reset CSS space so the UI pops back up
-            AdMob.hideBanner().catch(console.error);
-            setAdHeight(0);
-        };
+        // NO CLEANUP: We want the banner to persist permanently.
+        // This prevents React 18 Strict Mode from hiding the banner and resetting the height to 0!
     }, []);
 
     return <>{children}</>;
