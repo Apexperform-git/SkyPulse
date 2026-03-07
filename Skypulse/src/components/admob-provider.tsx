@@ -34,7 +34,7 @@ export function AdMobProvider({ children }: { children: React.ReactNode }) {
                     adSize: BannerAdSize.ADAPTIVE_BANNER,
                     position: BannerAdPosition.TOP_CENTER,
                     margin: 0,
-                    isTesting: true,
+                    isTesting: false,
                 };
 
                 await AdMob.showBanner(options);
